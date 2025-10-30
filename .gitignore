@@ -9,3 +9,5 @@ env.bak/
 venv.bak/
 
 prompts_rows.csv
+new_classifier.pt
+new_encoder.pt
