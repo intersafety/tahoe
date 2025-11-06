@@ -19,12 +19,12 @@ The training process follows two stages:
 
 ```mermaid
 graph TD
-A[Prompts CSV: content + label] --> B[Tokenization (BERT-base-uncased)]
-B --> C[Contrastive Encoder]
-C --> D[Supervised Contrastive Loss]
-D --> E[Fine-tune Classifier Head]
-E --> F[Evaluate on Validation Set]
-F --> G[Save Encoder as new_encoder.pt]
+A["Prompts CSV: content + label"] --> B["Tokenization: BERT-base-uncased"]
+B --> C["Contrastive Encoder"]
+C --> D["Supervised Contrastive Loss"]
+D --> E["Fine-tune Classifier Head"]
+E --> F["Evaluate on Validation Set"]
+F --> G["Save Encoder as new_encoder.pt"]
 ```
 
 ---
@@ -78,10 +78,10 @@ B -- far --> D(DANGEROUS_2)
 
 The **Supervised Contrastive Loss** is defined as:
 
-\[
+$$
 \mathcal{L} = - \sum_{i \in I} \frac{1}{|P(i)|} \sum_{p \in P(i)} 
 \log \frac{\exp(\text{sim}(z_i, z_p) / \tau)}{\sum_{a \in A(i)} \exp(\text{sim}(z_i, z_a) / \tau)}
-\]
+$$
 
 Where:
 - \( z_i \): embedding of sample \( i \)
@@ -106,10 +106,10 @@ Once the encoder has learned general representations, we add a classifier head a
 
 ```mermaid
 graph TD
-A[Input Text] --> B[Pretrained Encoder (frozen or semi-frozen)]
-B --> C[Dense Layer + ReLU]
-C --> D[Softmax Output Layer]
-D --> E[SAFE / DANGEROUS]
+A["Input Text"] --> B["Pretrained Encoder (frozen or semi-frozen)"]
+B --> C["Dense Layer + ReLU"]
+C --> D["Softmax Output Layer"]
+D --> E["SAFE / DANGEROUS"]
 ```
 
 ### Training Step
