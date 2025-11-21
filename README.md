@@ -19,7 +19,7 @@ The training process follows two stages:
 
 ```mermaid
 graph TD
-A["Prompts CSV: content + label"] --> B["Tokenization: BERT-base-uncased"]
+A["Prompts CSV: content + label"] --> B["Tokenization: MiniLML6-v2-base-uncased"]
 B --> C["Contrastive Encoder"]
 C --> D["Supervised Contrastive Loss"]
 D --> E["Fine-tune Classifier Head"]
@@ -45,7 +45,7 @@ df = pd.read_csv("prompts_rows.csv")
 df['label_id'] = LabelEncoder().fit_transform(df['label'])  # SAFE=0, DANGEROUS=1
 ```
 
-We use the `bert-base-uncased` tokenizer to tokenize the text, producing token IDs and attention masks for each prompt.
+We use the `MiniLML6-v2-base-uncased` tokenizer to tokenize the text, producing token IDs and attention masks for each prompt.
 
 ### Data Split
 
@@ -195,7 +195,7 @@ This preserves the encoder for future tasks, including:
 | **Contrastive pretraining** | Teaches the model general semantic structure beyond labels |
 | **Supervised variant** | Uses label information to better organize embedding space |
 | **Two-stage design** | Allows for clean separation between representation learning and task learning |
-| **BERT-base encoder** | Provides strong language understanding foundation |
+| **MiniLML6-v2 Base encoder** | Provides strong language understanding foundation |
 | **Classifier head** | Enables flexible, low-cost adaptation |
 | **Saved encoder** | Supports transfer, interpretability, and deployment reuse |
 
@@ -213,7 +213,7 @@ Together, they form a **robust, interpretable, and reusable** system.
 ```mermaid
 sequenceDiagram
     participant CSV as Dataset
-    participant Tokenizer as BERT Tokenizer
+    participant Tokenizer as MiniLML6-v2 Tokenizer
     participant Encoder as ContrastiveModel
     participant Loss as SupConLoss
     participant Classifier as Classifier Head
@@ -233,10 +233,12 @@ sequenceDiagram
 
 After training:
 - The **contrastive loss** steadily decreases, indicating structured embedding space formation.  
-- The **classifier loss** converges faster since it learns on top of meaningful embeddings.  
-- The **validation accuracy** should typically reach 85–95% depending on dataset balance.
+- The **classifier loss** converges in 6-7 epochs since it learns on top of meaningful embeddings.  
+- The **validation accuracy** was 95.6% over 5 randomised tests.
 
 A well-trained encoder should produce embeddings that can be visualized as two distinct clusters via t-SNE or UMAP.
+
+Altogether, this scored 75 on the ToxiChat evaluation framework.
 
 ---
 
@@ -282,7 +284,7 @@ This project follows a **modern representation-learning workflow** combining con
 It is inspired by approaches like SimCSE, SupCon, and CLIP—but adapted for **prompt safety classification**.
 
 **Pipeline Summary**
-1. Encode raw text using BERT tokenizer.  
+1. Encode raw text using MiniLML6-v2 tokenizer.  
 2. Train encoder contrastively to form structured embeddings.  
 3. Fine-tune classifier head for downstream prediction.  
 4. Evaluate, visualize, and save the encoder.  
